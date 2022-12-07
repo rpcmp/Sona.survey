@@ -8,7 +8,10 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Author> builder)
         {
-            builder.HasKey(x => x.Id).HasName("author_id");
+            builder.ToTable("Author");
+
+            builder.HasKey(x => x.Id)
+                .HasName("author_id");
 
             builder.Property(x => x.FirstName)
                 .HasColumnName("first_name")
@@ -22,6 +25,12 @@ namespace Infrastructure.Configurations
 
             builder.Property(x => x.Birthdate)
                 .HasColumnName("birthdate");
+
+            builder
+                .HasMany(x => x.Books)
+                .WithOne(x => x.Author)
+                .HasPrincipalKey(x => x.Id)
+                .HasForeignKey(x => x.Author.Id);
         }
     }
 }

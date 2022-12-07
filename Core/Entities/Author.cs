@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Base;
 using System;
+using System.Collections.Generic;
 
 namespace Core.Entities
 {
@@ -10,5 +11,7 @@ namespace Core.Entities
         public string LastName { get; set; }
 
         public DateTime? Birthdate { get; set; }
+
+        public List<Book> Books { get; set; }
     }
 }

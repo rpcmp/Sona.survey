@@ -4,8 +4,10 @@ using Core.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +35,15 @@ namespace PMSOFT_test
 
             var connectionString = Configuration.GetConnectionString("npgSQLConnection");
 
-            services.AddDbContext<ApplicationDbContext>(x => x.UseNpgsql(connectionString));
+            services.AddDbContext<ApplicationDbContext>(x => x.UseNpgsql(connectionString, b => b.MigrationsAssembly("Api")));
+            services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(opt =>
+                {
+                    opt.LoginPath = "/login";
+                });
+
 
             services.AddMediatR(typeof(GetBooksHandler).Assembly);
 
@@ -62,8 +72,8 @@ namespace PMSOFT_test
 
             app.UseRouting();
 
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
