@@ -11,12 +11,10 @@ namespace Application.Handlers.CommandHandlers.Genres
     public class DeleteGenreHandler : IRequestHandler<DeleteGenreCommand>
     {
         private readonly IGenreRepository _genreRepository;
-        private readonly IBookRepository _bookRepository;
 
-        public DeleteGenreHandler(IGenreRepository genreRepository, IBookRepository bookRepository)
+        public DeleteGenreHandler(IGenreRepository genreRepository)
         {
             _genreRepository = genreRepository;
-            _bookRepository = bookRepository;
         }
 
         public async Task<Unit> Handle(DeleteGenreCommand request, CancellationToken cancellationToken)
@@ -29,8 +27,7 @@ namespace Application.Handlers.CommandHandlers.Genres
                 throw new NotFoundException("Жанр не найден");
             }
 
-            var bookQuery = _bookRepository.GetQuery().Where(x => x.Genre.Id == genreId);
-            if (bookQuery.Any())
+            if (genre.Books.Any())
             {
                 throw new ConflictException("У данного жанра есть книги. Перед удалением жанра необходимо удалить книги с этим жанром");
             }

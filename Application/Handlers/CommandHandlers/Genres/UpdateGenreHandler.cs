@@ -37,7 +37,7 @@ namespace Application.Handlers.CommandHandlers.Genres
 
             var query = _genreRepository.GetQuery()
                 .Where(x => x.Id != genreId)
-                .Where(x => x.Name.Equals(request.Name, StringComparison.InvariantCultureIgnoreCase));
+                .Where(x => x.Name == request.Name);
 
             if (query.Any())
             {

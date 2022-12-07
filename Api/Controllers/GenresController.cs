@@ -2,6 +2,7 @@
 using Application.Models.Genres;
 using Application.Queries.Genres;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<GenreDto> GetGenre([FromRoute] int id)
         {
@@ -31,8 +33,9 @@ namespace Api.Controllers
             return result.FirstOrDefault();
         }
 
+        [Authorize]
         [HttpGet]
-        public async Task<GenreDto[]> GetGenres(int[] genreIds, string genreName)
+        public async Task<GenreDto[]> GetGenres([FromQuery] int[] genreIds, [FromQuery] string genreName)
         {
             var query = new GetGenresQuery()
             {
@@ -44,6 +47,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<GenreDto> CreateGenre([FromBody] CreateGenreCommand command)
         {
@@ -51,6 +55,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<GenreDto> UpdateGenre([FromBody] UpdateGenreCommand command)
         {
@@ -58,6 +63,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task Delete([FromQuery] int id)
         {
@@ -68,6 +74,5 @@ namespace Api.Controllers
 
             await _mediator.Send(command);
         }
-
     }
 }

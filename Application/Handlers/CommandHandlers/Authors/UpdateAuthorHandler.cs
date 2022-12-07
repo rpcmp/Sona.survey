@@ -42,8 +42,8 @@ namespace Application.Handlers.CommandHandlers.Authors
 
             var query = _authorRepository.GetQuery()
                 .Where(x => x.Id != authorId)
-                .Where(x => x.FirstName.Equals(request.FirstName, StringComparison.InvariantCultureIgnoreCase))
-                .Where(x => x.LastName.Equals(request.LastName, StringComparison.InvariantCultureIgnoreCase));
+                .Where(x => x.FirstName == request.FirstName)
+                .Where(x => x.LastName == request.LastName);
 
             if (request.Birthdate.HasValue)
             {

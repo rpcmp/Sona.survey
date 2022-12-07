@@ -2,6 +2,7 @@
 using Application.Models.Authors;
 using Application.Queries.Authors;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<AuthorDto> GetAuthor([FromRoute] int id)
         {
@@ -31,8 +33,9 @@ namespace Api.Controllers
             return result.FirstOrDefault();
         }
 
+        [Authorize]
         [HttpGet]
-        public async Task<AuthorDto[]> GetAuthors(int[] authorIds, string authorFirstName, string authorLastName)
+        public async Task<AuthorDto[]> GetAuthors([FromQuery] int[] authorIds, [FromQuery] string authorFirstName, [FromQuery] string authorLastName)
         {
             var query = new GetAuthorsQuery()
             {
@@ -45,6 +48,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<AuthorDto> CreateAuthor([FromBody] CreateAuthorCommand command)
         {
@@ -52,6 +56,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<AuthorDto> UpdateAuthor([FromBody] UpdateAuthorCommand command)
         {
@@ -59,6 +64,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task DeleteAuthor([FromRoute] int id)
         {

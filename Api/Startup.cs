@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace PMSOFT_test
 {
@@ -36,13 +37,40 @@ namespace PMSOFT_test
             var connectionString = Configuration.GetConnectionString("npgSQLConnection");
 
             services.AddDbContext<ApplicationDbContext>(x => x.UseNpgsql(connectionString, b => b.MigrationsAssembly("Api")));
-            services.AddIdentityCore<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentityCore<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<SignInManager<IdentityUser>>();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services
+                .AddAuthentication(opt =>
+                {
+                    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opt.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opt.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    opt.DefaultSignOutScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
                 .AddCookie(opt =>
                 {
                     opt.LoginPath = "/login";
                 });
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.SignIn.RequireConfirmedAccount = false;
+
+                options.Password.RequiredLength= 5;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric= false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            });
 
 
             services.AddMediatR(typeof(GetBooksHandler).Assembly);

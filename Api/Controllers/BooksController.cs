@@ -2,6 +2,7 @@
 using Application.Queries.Books;
 using Application.Responses.Books;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<BookDto> GetBook([FromRoute] int id)
         {
@@ -31,8 +33,9 @@ namespace Api.Controllers
             return result.FirstOrDefault();
         }
 
+        [Authorize]
         [HttpGet]
-        public async Task<BookDto[]> GetBooks(int[] bookIds, string title, string genreName, string authorFirstName, string authorLastName)
+        public async Task<BookDto[]> GetBooks([FromQuery] int[] bookIds, [FromQuery] string title, [FromQuery] string genreName, [FromQuery] string authorFirstName, [FromQuery] string authorLastName)
         {
             var query = new GetBooksQuery()
             {
@@ -47,6 +50,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<BookDto> CreateBook([FromBody] CreateBookCommand command)
         {
@@ -54,6 +58,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<BookDto> UpdateBook([FromBody] UpdateBookCommand command)
         {
@@ -61,6 +66,7 @@ namespace Api.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task DeleteBook([FromRoute] int id)
         {

@@ -11,12 +11,10 @@ namespace Application.Handlers.CommandHandlers.Authors
     public class DeleteAuthorHandler : IRequestHandler<DeleteAuthorCommand>
     {
         private readonly IAuthorRepository _authorRepository;
-        private readonly IBookRepository _bookRepository;
 
-        public DeleteAuthorHandler(IAuthorRepository authorRepository, IBookRepository bookRepository)
+        public DeleteAuthorHandler(IAuthorRepository authorRepository)
         {
             _authorRepository = authorRepository;
-            _bookRepository = bookRepository;
         }
 
         public async Task<Unit> Handle(DeleteAuthorCommand request, CancellationToken cancellationToken)
@@ -29,8 +27,7 @@ namespace Application.Handlers.CommandHandlers.Authors
                 throw new NotFoundException("Автор не найден");
             }
 
-            var booksQuery = _bookRepository.GetQuery().Where(x => x.Author.Id == authorId);
-            if (booksQuery.Any())
+            if (author.Books.Any())
             {
                 throw new ConflictException("У данного автора есть книги. Перед удалением автора необходимо удалить книги этого автора");
             }
