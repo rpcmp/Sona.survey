@@ -1,4 +1,5 @@
-﻿using Application.Commands.Genres;
+﻿using Api.Attributes;
+using Application.Commands.Genres;
 using Application.Models.Genres;
 using Application.Queries.Genres;
 using MediatR;
@@ -49,6 +50,7 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPut]
+        [ValidateModel]
         public async Task<GenreDto> CreateGenre([FromBody] CreateGenreCommand command)
         {
             var result = await _mediator.Send(command);
@@ -57,6 +59,7 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateModel]
         public async Task<GenreDto> UpdateGenre([FromBody] UpdateGenreCommand command)
         {
             var result = await _mediator.Send(command);
