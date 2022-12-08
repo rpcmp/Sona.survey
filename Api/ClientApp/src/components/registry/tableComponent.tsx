@@ -1,9 +1,10 @@
 import React, { useState, useEffect, } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Alert, Table, Nav, NavItem, NavLink, Button } from 'reactstrap';
 import { Entity } from '../models';
 import { FiEdit } from 'react-icons/fi'
 import { AiFillDelete } from 'react-icons/ai'
+import { post } from '../client';
 
 export interface CreateModalComponentProps {
     modalProps: ModalProps;
@@ -53,19 +54,15 @@ export default function TableComponent<T extends Entity>(props: TableProps<T>) {
     const navigate = useNavigate();
 
     function toBooks() {
-        navigate('../books');
+        navigate('/books', { replace: true });
     }
 
     function toAuthors() {
-        navigate('../authors');
+        navigate('/authors', { replace: true });
     }
 
     function toGenres() {
-        navigate('../genres');
-    }
-
-    if (data.length == 0) {
-        // return (<Alert color='primary' className='w-100 rounded-0'>Нет записей</Alert>)
+        navigate('/genres', { replace: true });
     }
 
     function update(id: number): void {
@@ -78,6 +75,20 @@ export default function TableComponent<T extends Entity>(props: TableProps<T>) {
         await loadData();
     }
 
+    async function logout(): Promise<void> {
+        let resp = await post('/api/Account/logout', null);
+        navigate('/login', {replace: true});
+    }
+
+    function checkCookie(name: string): boolean {
+        let value = `; ${document.cookie}`;
+        let parts = value.split(`; ${name}=`);
+        return parts.length > 1;
+    }
+
+    if (!checkCookie('.AspNetCore.Cookies')) {
+        return <Navigate to='/login' replace />
+    }
 
     return (
         <>
@@ -94,6 +105,9 @@ export default function TableComponent<T extends Entity>(props: TableProps<T>) {
                     </NavItem>
                     <NavItem>
                         <NavLink href="#" onClick={() => setAddModal(true)}>Добавить</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink href="#" onClick={() => logout()}>Выйти</NavLink>
                     </NavItem>
                 </Nav>
 
