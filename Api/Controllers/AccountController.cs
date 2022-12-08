@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +28,32 @@ namespace Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto register)
         {
+            if (string.IsNullOrEmpty(register.UserName))
+            {
+                throw new BadRequestException("Необходимо указать имя пользователя");
+            }
+
+            if (string.IsNullOrEmpty(register.Password))
+            {
+                throw new BadRequestException("Необходимо указать пароль");
+            }
+
+            if (string.IsNullOrEmpty(register.ConfirmPassword))
+            {
+                throw new BadRequestException("Необходимо подтвердить пароль");
+            }
+
+            if (!string.Equals(register.Password, register.ConfirmPassword))
+            {
+                throw new BadRequestException("Пароли не совпадают");
+            }
+
+            var existsUser = await _userManager.FindByNameAsync(register.UserName);
+            if (existsUser != null)
+            {
+                throw new BadRequestException("Пользователь с таким именем уже существует");
+            }
+
             var user = new IdentityUser()
             {
                 UserName = register.UserName,
@@ -47,8 +74,18 @@ namespace Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto login)
+        public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
+            if (string.IsNullOrEmpty(login.Name))
+            {
+                throw new BadRequestException("Необходимо указать имя пользователя");
+            }
+
+            if (string.IsNullOrEmpty(login.Password))
+            {
+                throw new BadRequestException("Необходимо указать пароль");
+            }
+
             var user = await _userManager.FindByNameAsync(login.Name);
             if (user == null)
             {
@@ -71,7 +108,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return Ok();
+            return NoContent();
         }
     }
 }

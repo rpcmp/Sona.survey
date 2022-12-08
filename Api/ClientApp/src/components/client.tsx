@@ -12,7 +12,7 @@ export function post<T, TOut>(uri: string, body: T): Promise<TOut> {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body)
+        body: body ? JSON.stringify(body) : null
     }).then(x => handlerResponse<TOut>(x));
 }
 
@@ -22,7 +22,7 @@ export function put<T, TOut>(uri: string, body: T): Promise<TOut> {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body)
+        body: body ? JSON.stringify(body) : null
     }).then(x => handlerResponse<TOut>(x));
 }
 

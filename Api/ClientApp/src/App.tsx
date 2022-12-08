@@ -8,25 +8,16 @@ import GenresTableComponent from './components/registry/genres/genresTableCompon
 import BooksTableComponent from './components/registry/books/booksTableComponent';
 import AuthorTableComponent from './components/registry/authors/authorsTableComponent';
 
-function checkCookie(name: string): boolean {
-  let value = `; ${document.cookie}`;
-  let parts = value.split(`; ${name}=`);
-  return parts.length > 1;
-}
+
 
 const App = () => {
-  let isAuth = checkCookie('.AspNetCore.Cookies');
-
-  if (!isAuth) {
-    return <LoginComponent />
-  }
-
   return (
     <Container fluid>
       <Router>
         <Routes>
-          <Route path='/' element={<Navigate to={'/books'} />} />
+          <Route path='login' element={<LoginComponent />} />
           <Route path='register' element={<RegisterComponent />} />
+          <Route path='/' element={<Navigate to={'/books'} />} />
           <Route path='books' element={<BooksTableComponent />} />
           <Route path='authors' element={<AuthorTableComponent />} />
           <Route path='genres' element={<GenresTableComponent />} />

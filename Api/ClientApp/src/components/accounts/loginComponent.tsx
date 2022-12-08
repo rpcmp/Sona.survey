@@ -14,6 +14,8 @@ export default function LoginComponent() {
         textAlert: ''
     });
 
+    const navigate = useNavigate();
+
     const [name, setName] = useState<string>('');
     const [pass, setPass] = useState<string>('');
 
@@ -52,7 +54,7 @@ export default function LoginComponent() {
         });
 
         if (response.status == 200) {
-            redirect('../books');
+            navigate('/books', { replace: true });
         } else {
             let message = await response.text();
 
@@ -65,7 +67,7 @@ export default function LoginComponent() {
     }
 
     function toRegister(): void {
-        redirect('../register');
+        navigate('/register', { replace: true });
     }
 
     return (

@@ -79,7 +79,7 @@ export default function RegisterComponent() {
     }
 
     function toLogin(): void {
-        navigate('../login');
+        navigate('/login', { replace: true });
     }
 
     return (
