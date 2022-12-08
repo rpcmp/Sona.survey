@@ -1,5 +1,4 @@
-﻿using Api.Attributes;
-using Api.Models.Accounts;
+﻿using Api.Models.Accounts;
 using Application.Exceptions;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
@@ -26,7 +25,6 @@ namespace Api.Controllers
         }
 
         [HttpPost("register")]
-        [ValidateModel]
         public async Task<IActionResult> Register([FromBody] RegisterDto register)
         {
             var user = new IdentityUser()
@@ -49,7 +47,6 @@ namespace Api.Controllers
         }
 
         [HttpPost("login")]
-        [ValidateModel]
         public async Task<IActionResult> Login(LoginDto login)
         {
             var user = await _userManager.FindByNameAsync(login.Name);

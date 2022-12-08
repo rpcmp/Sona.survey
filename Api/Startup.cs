@@ -8,12 +8,15 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.ComponentModel;
 
 namespace PMSOFT_test
 {
@@ -51,6 +54,7 @@ namespace PMSOFT_test
                 })
                 .AddCookie(opt =>
                 {
+                    opt.Cookie.HttpOnly = false;
                     opt.LoginPath = "/login";
                 });
 
@@ -65,9 +69,9 @@ namespace PMSOFT_test
                 options.SignIn.RequireConfirmedPhoneNumber = false;
                 options.SignIn.RequireConfirmedAccount = false;
 
-                options.Password.RequiredLength= 5;
+                options.Password.RequiredLength = 5;
                 options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric= false;
+                options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
             });
@@ -79,9 +83,20 @@ namespace PMSOFT_test
             services.AddTransient<IAuthorRepository, AuthorRepository>();
             services.AddTransient<IGenreRepository, GenreRepository>();
 
-            services.AddControllers(options =>
+            services
+                .AddControllers(options =>
+                {
+                    options.Filters.Add(typeof(ExceptionFilter));
+                    options.Filters.Add(typeof(VoidAndTaskTo204NoContentFilter));
+                })
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+                });
+
+            services.AddSpaStaticFiles(configuration =>
             {
-                options.Filters.Add(typeof(ExceptionFilter));
+                configuration.RootPath = "ClientApp/build";
             });
         }
 
@@ -97,6 +112,8 @@ namespace PMSOFT_test
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             app.UseRouting();
 
@@ -105,7 +122,19 @@ namespace PMSOFT_test
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }

@@ -2,6 +2,7 @@
 using Application.Exceptions;
 using Core.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,11 @@ namespace Application.Handlers.CommandHandlers.Authors
         {
             var authorId = request.Id;
 
-            var author = await _authorRepository.GetByIdAsync(authorId);
+            var author = _authorRepository.GetQuery()
+                .Where(x => x.Id == authorId)
+                .Include(x => x.Books)
+                .FirstOrDefault();
+
             if (author == null)
             {
                 throw new NotFoundException("Автор не найден");

@@ -1,5 +1,4 @@
-﻿using Api.Attributes;
-using Application.Commands.Books;
+﻿using Application.Commands.Books;
 using Application.Queries.Books;
 using Application.Responses.Books;
 using MediatR;
@@ -53,7 +52,6 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPut]
-        [ValidateModel]
         public async Task<BookDto> CreateBook([FromBody] CreateBookCommand command)
         {
             var result = await _mediator.Send(command);
@@ -62,7 +60,6 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPost]
-        [ValidateModel]
         public async Task<BookDto> UpdateBook([FromBody] UpdateBookCommand command)
         {
             var result = await _mediator.Send(command);

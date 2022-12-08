@@ -1,5 +1,4 @@
-﻿using Api.Attributes;
-using Application.Commands.Authors;
+﻿using Application.Commands.Authors;
 using Application.Models.Authors;
 using Application.Queries.Authors;
 using MediatR;
@@ -51,7 +50,6 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPut]
-        [ValidateModel]
         public async Task<AuthorDto> CreateAuthor([FromBody] CreateAuthorCommand command)
         {
             var result = await _mediator.Send(command);
@@ -60,7 +58,6 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpPost]
-        [ValidateModel]
         public async Task<AuthorDto> UpdateAuthor([FromBody] UpdateAuthorCommand command)
         {
             var result = await _mediator.Send(command);

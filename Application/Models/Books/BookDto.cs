@@ -14,5 +14,6 @@ namespace Application.Responses.Books
         public GenreDto Genre { get; set; }
 
         public AuthorDto Author { get; set; }
+
     }
 }

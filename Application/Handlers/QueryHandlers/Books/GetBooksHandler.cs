@@ -3,6 +3,7 @@ using Application.Queries.Books;
 using Application.Responses.Books;
 using Core.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -21,7 +22,10 @@ namespace Application.Handlers.QueryHandlers.Books
 
         public Task<BookDto[]> Handle(GetBooksQuery request, CancellationToken cancellationToken)
         {
-            var query = _bookRepository.GetQuery();
+            var query = _bookRepository.GetQuery()
+                .Include(x => x.Genre)
+                .Include(x => x.Author)
+                .AsQueryable();
 
             if (request.BookIds != null && request.BookIds.Any())
             {

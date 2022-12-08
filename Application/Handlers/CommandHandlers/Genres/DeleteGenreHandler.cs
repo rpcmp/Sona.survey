@@ -2,6 +2,7 @@
 using Application.Exceptions;
 using Core.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,13 +22,17 @@ namespace Application.Handlers.CommandHandlers.Genres
         {
             var genreId = request.Id;
 
-            var genre = await _genreRepository.GetByIdAsync(genreId);
+            var genre = _genreRepository.GetQuery()
+                .Where(x => x.Id == genreId)
+                .Include(x => x.Books)
+                .FirstOrDefault();
+
             if (genre == null)
             {
                 throw new NotFoundException("Жанр не найден");
             }
 
-            if (genre.Books.Any())
+            if (genre.Books != null && genre.Books.Any())
             {
                 throw new ConflictException("У данного жанра есть книги. Перед удалением жанра необходимо удалить книги с этим жанром");
             }

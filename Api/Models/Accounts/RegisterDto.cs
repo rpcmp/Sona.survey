@@ -14,6 +14,6 @@ namespace Api.Models.Accounts
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        public string ConfirmPassowrd { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }

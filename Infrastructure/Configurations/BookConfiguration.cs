@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations
@@ -11,7 +12,7 @@ namespace Infrastructure.Configurations
             builder.ToTable("Book");
 
             builder.HasKey(x => x.Id)
-                .HasName("book_id");
+                .HasName("id");
 
             builder.Property(x => x.Title)
                 .HasColumnName("title")
@@ -24,13 +25,11 @@ namespace Infrastructure.Configurations
             builder
                 .HasOne(x => x.Author)
                 .WithMany(x => x.Books)
-                .HasForeignKey(x => x.Author.Id)
                 .IsRequired();
 
             builder
                 .HasOne(x => x.Genre)
                 .WithMany(x => x.Books)
-                .HasForeignKey(x => x.Genre.Id)
                 .IsRequired();
         }
     }
