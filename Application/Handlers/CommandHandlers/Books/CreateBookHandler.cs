@@ -30,10 +30,20 @@ namespace Application.Handlers.CommandHandlers.Books
                 throw new BadRequestException("Необходимо указать название книги");
             }
 
+            if (request.Author == null)
+            {
+                throw new BadRequestException("Необходимо указать автора книги");
+            }
+
             var author = await _authorRepository.GetByIdAsync(request.Author.Id);
             if (author == null)
             {
                 throw new NotFoundException("Автор книги не найден");
+            }
+
+            if (request.Genre == null)
+            {
+                throw new BadRequestException("Необходимо указать жанр книги");
             }
 
             var genre = await _genreRepository.GetByIdAsync(request.Genre.Id);
