@@ -31,10 +31,10 @@ export default function UpdateAuthorModalComponent(props: UpdateModalComponentPr
             id: id,
             firstName: firstName,
             lastName: lastName,
-            birthdate: birthdate
+            birthdate: birthdate ?? undefined
         };
 
-        return post('api/Genres', author);
+        return post('api/Authors', author);
     }
 
     return (
@@ -48,7 +48,7 @@ export default function UpdateAuthorModalComponent(props: UpdateModalComponentPr
             </InputGroup>
             <br />
             <InputGroup>
-                <Input placeholder='Дата рождения' value={birthdate?.toString()} onChange={(e) => { setBirthdate(e.target.valueAsDate ?? new Date()) }} />
+            <Input placeholder='Дата рождения' type='date' onChange={(e) => { setBirthdate(e.target.valueAsDate ?? new Date()) }} />
             </InputGroup>
         </UpdateModalComponent>
     )
