@@ -1,7 +1,7 @@
 import React, { useState, useEffect, } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Alert, Table, Nav, NavItem, NavLink, Button } from 'reactstrap';
-import { Entity } from '../models';
+import { Entity, ModalProps } from '../models';
 import { FiEdit } from 'react-icons/fi'
 import { AiFillDelete } from 'react-icons/ai'
 import { post } from '../client';
@@ -15,11 +15,6 @@ export interface UpdateModalComponentProps {
     id: number;
     modalProps: ModalProps;
     loadData: () => Promise<void>;
-}
-
-export interface ModalProps {
-    isOpen: boolean;
-    setIsOpen: (a: boolean) => void;
 }
 
 interface TableProps<T> {

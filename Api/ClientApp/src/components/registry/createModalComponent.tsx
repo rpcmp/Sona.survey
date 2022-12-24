@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { ModalProps } from './tableComponent';
+import { ModalProps } from '../models';
 
 interface CreateModalProps<T> {
     modalState: ModalProps;

@@ -19,3 +19,13 @@ export interface AuthorModel extends Entity {
     lastName: string,
     birthdate?: Date
 }
+
+export interface ModalProps {
+    isOpen: boolean;
+    setIsOpen: (a: boolean) => void;
+
+}
+
+export interface TextModalProps extends ModalProps {
+    setModalText: (text: string) => void;
+}

@@ -1,5 +1,5 @@
 using Api.Filters;
-using Application.Handlers.QueryHandlers.Books;
+using Application.Handlers.QueryHandlers.Surveys;
 using Core.Repositories;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
-using System.ComponentModel;
 
 namespace PMSOFT_test
 {
@@ -77,11 +75,9 @@ namespace PMSOFT_test
             });
 
 
-            services.AddMediatR(typeof(GetBooksHandler).Assembly);
+            services.AddMediatR(typeof(GetSurveysHandler).Assembly);
 
-            services.AddTransient<IBookRepository, BookRepository>();
-            services.AddTransient<IAuthorRepository, AuthorRepository>();
-            services.AddTransient<IGenreRepository, GenreRepository>();
+            services.AddTransient<ISurveyRepository, SurveyRepository>();
 
             services
                 .AddControllers(options =>

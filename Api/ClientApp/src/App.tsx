@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Nav, NavItem, NavLink } from 'reactstrap';
+import { Container, Modal, ModalHeader, ModalBody, ModalFooter, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import LoginComponent from './components/accounts/loginComponent';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import RegisterComponent from './components/accounts/registerComponent';
-import GenresTableComponent from './components/registry/genres/genresTableComponent';
-import BooksTableComponent from './components/registry/books/booksTableComponent';
-import AuthorTableComponent from './components/registry/authors/authorsTableComponent';
+import SurveyComponent from './components/survey/surveyComponent';
 
 
 
 const App = () => {
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalText, setModalText] = useState<string | null>(null);
+  const toggle = () => setModalIsOpen(!modalIsOpen);
+
   return (
-    <Container fluid>
-      <Router>
-        <Routes>
-          <Route path='login' element={<LoginComponent />} />
-          <Route path='register' element={<RegisterComponent />} />
-          <Route path='/' element={<Navigate to={'/books'} />} />
-          <Route path='books' element={<BooksTableComponent />} />
-          <Route path='authors' element={<AuthorTableComponent />} />
-          <Route path='genres' element={<GenresTableComponent />} />
-        </Routes>
-      </Router>
-    </Container >
+    <>
+      <Container>
+        <Router>
+          <Routes>
+            <Route path='login' element={<LoginComponent />} />
+            <Route path='/' element={<SurveyComponent isOpen={modalIsOpen} setIsOpen={setModalIsOpen} setModalText={setModalText} />} />
+          </Routes>
+        </Router>
+      </Container >
+      <Modal isOpen={modalIsOpen} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Результат сохранен</ModalHeader>
+        <ModalBody>{modalText}</ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle}>Закрыть</Button>
+        </ModalFooter>
+      </Modal>
+    </>
   );
 }
 
